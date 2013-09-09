@@ -13,8 +13,6 @@ bin/
 
 gen/
 
-libs/*
-
 obj/
 
 # Local configuration file (sdk path, etc)
