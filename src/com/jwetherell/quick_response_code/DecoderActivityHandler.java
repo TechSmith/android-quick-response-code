@@ -50,7 +50,7 @@ public final class DecoderActivityHandler extends Handler {
         PREVIEW, SUCCESS, DONE
     }
 
-    DecoderActivityHandler(IDecoderActivity activity, Collection<BarcodeFormat> decodeFormats, String characterSet,
+    public DecoderActivityHandler(IDecoderActivity activity, Collection<BarcodeFormat> decodeFormats, String characterSet,
             CameraManager cameraManager) {
         this.activity = activity;
         decodeThread = new DecodeThread(activity, decodeFormats, characterSet, new ViewfinderResultPointCallback(
