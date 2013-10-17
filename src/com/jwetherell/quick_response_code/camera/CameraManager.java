@@ -45,14 +45,14 @@ public final class CameraManager {
     private static final int MAX_FRAME_WIDTH = 600;
     private static final int MAX_FRAME_HEIGHT = 400;
 
-    protected final CameraConfigurationManager configManager;
-    protected Camera camera;
-    protected Rect framingRect;
-    protected Rect framingRectInPreview;
-    protected boolean initialized;
-    protected boolean previewing;
-    protected int requestedFramingRectWidth;
-    protected int requestedFramingRectHeight;
+    private final CameraConfigurationManager configManager;
+    private Camera camera;
+    private Rect framingRect;
+    private Rect framingRectInPreview;
+    private boolean initialized;
+    private boolean previewing;
+    private int requestedFramingRectWidth;
+    private int requestedFramingRectHeight;
 
     /**
      * Preview frames are delivered here, which we pass on to the registered
@@ -90,27 +90,35 @@ public final class CameraManager {
      *             Indicates the camera driver failed to open.
      */
     public void openDriver(SurfaceHolder holder) throws IOException {
-        Camera theCamera = camera;
-        if (theCamera == null) {
-            theCamera = Camera.open();
-            if (theCamera == null) {
-                throw new IOException();
-            }
-            camera = theCamera;
-        }
-        theCamera.setPreviewDisplay(holder);
-
-        if (!initialized) {
-            initialized = true;
-            configManager.initFromCameraParameters(theCamera);
-            if (requestedFramingRectWidth > 0 && requestedFramingRectHeight > 0) {
-                setManualFramingRect(requestedFramingRectWidth, requestedFramingRectHeight);
-                requestedFramingRectWidth = 0;
-                requestedFramingRectHeight = 0;
-            }
-        }
-        configManager.setDesiredCameraParameters(theCamera);
+       openDriver( holder, -1 );
     }
+    
+    public void openDriver(SurfaceHolder holder, int cameraID) throws IOException {
+       Camera theCamera = camera;
+       if (theCamera == null) {
+           if ( cameraID == -1 ) {
+              theCamera = Camera.open();
+           } else {
+              theCamera = Camera.open( cameraID );
+           }
+           if (theCamera == null) {
+               throw new IOException();
+           }
+           camera = theCamera;
+       }
+       theCamera.setPreviewDisplay(holder);
+
+       if (!initialized) {
+           initialized = true;
+           configManager.initFromCameraParameters(theCamera);
+           if (requestedFramingRectWidth > 0 && requestedFramingRectHeight > 0) {
+               setManualFramingRect(requestedFramingRectWidth, requestedFramingRectHeight);
+               requestedFramingRectWidth = 0;
+               requestedFramingRectHeight = 0;
+           }
+       }
+       configManager.setDesiredCameraParameters(theCamera);
+   }
 
     /**
      * Closes the camera driver if still in use.
