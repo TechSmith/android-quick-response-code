@@ -45,14 +45,14 @@ public final class CameraManager {
     private static final int MAX_FRAME_WIDTH = 600;
     private static final int MAX_FRAME_HEIGHT = 400;
 
-    private final CameraConfigurationManager configManager;
-    private Camera camera;
-    private Rect framingRect;
-    private Rect framingRectInPreview;
-    private boolean initialized;
-    private boolean previewing;
-    private int requestedFramingRectWidth;
-    private int requestedFramingRectHeight;
+    protected final CameraConfigurationManager configManager;
+    protected Camera camera;
+    protected Rect framingRect;
+    protected Rect framingRectInPreview;
+    protected boolean initialized;
+    protected boolean previewing;
+    protected int requestedFramingRectWidth;
+    protected int requestedFramingRectHeight;
 
     /**
      * Preview frames are delivered here, which we pass on to the registered
