@@ -16,10 +16,12 @@
 
 package com.jwetherell.quick_response_code.camera;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -93,7 +95,8 @@ public final class CameraManager {
        openDriver( holder, -1 );
     }
     
-    public void openDriver(SurfaceHolder holder, int cameraID) throws IOException {
+    @SuppressLint( "NewApi" )
+   public void openDriver(SurfaceHolder holder, int cameraID) throws IOException {
        Camera theCamera = camera;
        if (theCamera == null) {
            if ( cameraID == -1 ) {
@@ -185,9 +188,12 @@ public final class CameraManager {
      *            The message to deliver.
      */
     public void requestAutoFocus(Handler handler, int message) {
-        if (camera != null && previewing) {
-            autoFocusCallback.setHandler(handler, message);
-            camera.autoFocus(autoFocusCallback);
+        if (camera != null && previewing ) {
+            if ( camera.getParameters().getFocusMode() == Parameters.FOCUS_MODE_AUTO 
+                 || camera.getParameters().getFocusMode() == Parameters.FOCUS_MODE_MACRO) {
+               autoFocusCallback.setHandler(handler, message);
+               camera.autoFocus(autoFocusCallback);
+            }
         }
     }
 
