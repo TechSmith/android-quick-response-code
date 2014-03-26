@@ -18,6 +18,7 @@ package com.jwetherell.quick_response_code.camera;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -55,6 +56,8 @@ public final class CameraManager {
     private boolean previewing;
     private int requestedFramingRectWidth;
     private int requestedFramingRectHeight;
+    
+    private Context mContext;
 
     /**
      * Preview frames are delivered here, which we pass on to the registered
@@ -69,7 +72,8 @@ public final class CameraManager {
     private final AutoFocusCallback autoFocusCallback;
 
     public CameraManager(Context context) {
-        this.configManager = new CameraConfigurationManager(context);
+        mContext = context;
+        this.configManager = new CameraConfigurationManager(mContext);
         previewCallback = new PreviewCallback(configManager);
         autoFocusCallback = new AutoFocusCallback();
     }
@@ -189,11 +193,15 @@ public final class CameraManager {
      */
     public void requestAutoFocus(Handler handler, int message) {
         if (camera != null && previewing ) {
-            if ( camera.getParameters().getFocusMode() == Parameters.FOCUS_MODE_AUTO 
-                 || camera.getParameters().getFocusMode() == Parameters.FOCUS_MODE_MACRO) {
-               autoFocusCallback.setHandler(handler, message);
-               camera.autoFocus(autoFocusCallback);
-            }
+           try {
+              PackageManager pm = mContext.getPackageManager();
+              if ( pm.hasSystemFeature( PackageManager.FEATURE_CAMERA_AUTOFOCUS )) {
+                  autoFocusCallback.setHandler(handler, message);
+                  camera.autoFocus(autoFocusCallback);
+               }
+           } catch ( RuntimeException e ) {
+              Log.v( "AndroidQuickResponseCode", "requestAutoFocus threw RuntimeException" );
+           }
         }
     }
 
