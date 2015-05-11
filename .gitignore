@@ -18,3 +18,8 @@ obj/
 # Local configuration file (sdk path, etc)
 local.properties
 
+*.swp
+
+# For gradle
+build
+*.iml

@@ -1,0 +1,42 @@
+buildscript {
+    repositories {
+        jcenter()
+
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.2.3'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.0"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
+
+}
+
+dependencies {
+    compile files('libs/core.jar')
+}
